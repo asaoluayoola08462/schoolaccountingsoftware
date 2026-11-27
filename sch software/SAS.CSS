@@ -1,0 +1,639 @@
+/* ---------- GLOBAL STYLES ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #172b4d;
+  --primary-hover: #284879;
+  --background: #f5f7fb;
+  --surface: #ffffff;
+  --text: #172033;
+  --muted: #647084;
+  --border: #e1e6ef;
+  --danger: #a61b1b;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+header {
+  background: var(--surface);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--primary);
+}
+
+header p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+main,
+.container,
+.dashboard {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h2 {
+  color: var(--primary);
+}
+
+h3 {
+  color: var(--text);
+}
+
+p {
+  overflow-wrap: anywhere;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- DASHBOARD SUMMARY ---------- */
+
+.stats,
+.stats-grid,
+.dashboard-stats,
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.stat-card,
+.stat,
+.summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.stat-card p,
+.stat p,
+.summary-card p {
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+
+.stat-card h2,
+.stat-card h3,
+.stat h2,
+.stat h3,
+.summary-card h2,
+.summary-card h3 {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- PANELS ---------- */
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin-top: 24px;
+  min-width: 0;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+.panel > p {
+  color: var(--muted);
+}
+
+/* ---------- FORMS ---------- */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 22px 0;
+}
+
+.form-grid label,
+#feeStructure > label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-grid input,
+.form-grid select,
+#studentSearch,
+#feeClassFilter {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #ccd4e0;
+  border-radius: 7px;
+  background: white;
+  color: var(--text);
+  font: inherit;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid #8daee3;
+  outline-offset: 1px;
+}
+
+.primary-btn {
+  display: inline-block;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+}
+
+.primary-btn:hover {
+  background: var(--primary-hover);
+}
+
+#formMessage,
+#feeMessage {
+  margin-bottom: 0;
+  font-size: 14px;
+  color: var(--primary);
+}
+
+/* ---------- STUDENT SEARCH ---------- */
+
+#studentSearch {
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+/* ---------- TABLES ---------- */
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  background: var(--surface);
+}
+
+th,
+td {
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+th {
+  color: var(--muted);
+  font-size: 13px;
+  background: #f8f9fc;
+}
+
+td {
+  font-size: 14px;
+}
+
+tbody tr:hover {
+  background: #fafbfe;
+}
+
+/* ---------- FEE CLASS SELECTOR ---------- */
+
+#feeStructure > label {
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+#feeClassFilter {
+  max-width: 500px;
+  display: block;
+}
+
+#classFeeView {
+  margin-top: 24px;
+}
+
+#classFeeView h3 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+#classFeeTotal {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* ---------- DELETE BUTTON ---------- */
+
+.delete-fee-btn {
+  background: #fff0f0;
+  color: var(--danger);
+  border: 1px solid #f0c4c4;
+  border-radius: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.delete-fee-btn:hover {
+  background: #ffe0e0;
+}
+
+/* ---------- LINKS AND OTHER BUTTONS ---------- */
+
+button:focus-visible {
+  outline: 2px solid #4676bd;
+  outline-offset: 3px;
+}
+
+/* ---------- RESPONSIVE LAYOUT ---------- */
+
+@media (max-width: 700px) {
+  header {
+    padding: 14px 16px;
+    align-items: flex-start;
+  }
+
+  header h1 {
+    font-size: 21px;
+  }
+
+  main,
+  .container,
+  .dashboard {
+    padding: 16px;
+  }
+
+  .stats,
+  .stats-grid,
+  .dashboard-stats,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  th,
+  td {
+    padding: 11px 8px;
+  }
+}
+
+/* ---------- PAYMENT AND RECEIPT ---------- */
+
+#paymentForm {
+  margin-top: 18px;
+}
+
+#paymentMessage {
+  margin-top: 12px;
+  color: #172b4d;
+}
+
+#receiptDisplay {
+  margin-top: 16px;
+}
+
+#printableReceipt {
+  max-width: 650px;
+  padding: 24px;
+  border: 1px solid #dce3ed;
+  border-radius: 10px;
+  background: white;
+}
+
+#printableReceipt h3 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+#printableReceipt p {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+#printReceipt {
+  margin-top: 16px;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printableReceipt,
+  #printableReceipt * {
+    visibility: visible !important;
+  }
+
+  #printableReceipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: none;
+    border: none;
+    padding: 0;
+    color: black;
+  }
+
+  #printableReceipt p {
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+/* Statement of Account and payment print layouts */
+#statementSection,
+#paymentsSection,
+#receiptSection {
+scroll-margin-top: 20px;
+}
+
+#statementDisplay,
+#receiptDisplay {
+margin-top: 18px;
+overflow-x: auto;
+}
+
+#statementDisplay h3,
+#receiptDisplay h3 {
+text-align: center;
+margin: 0 0 22px;
+}
+
+.statement-table {
+width: 100%;
+border-collapse: collapse;
+margin: 12px 0 22px;
+}
+
+.statement-table th,
+.statement-table td {
+border: 1px solid #dce3ed;
+padding: 10px;
+text-align: left;
+}
+
+.statement-table th {
+background: #f0f4f9;
+}
+
+.statement-totals {
+margin-top: 22px;
+padding: 14px;
+background: #f5f7fb;
+border-radius: 8px;
+}
+
+.statement-totals p {
+margin: 8px 0;
+}
+
+.statement-note {
+margin-top: 20px;
+font-size: 0.9rem;
+color: #5b6575;
+}
+
+#printableReceipt,
+#printableStatement {
+background: white;
+color: #172033;
+padding: 24px;
+border: 1px solid #dce3ed;
+border-radius: 10px;
+}
+
+#printableReceipt > p,
+#printableStatement > p {
+padding-bottom: 8px;
+border-bottom: 1px solid #edf0f5;
+}
+
+#paymentMessage,
+#statementMessage {
+margin-top: 12px;
+}
+
+@media print {
+body.printing-receipt * ,
+body.printing-statement * {
+  visibility: hidden !important;
+}
+
+body.printing-receipt #printableReceipt,
+body.printing-receipt #printableReceipt *,
+body.printing-statement #printableStatement,
+body.printing-statement #printableStatement * {
+  visibility: visible !important;
+}
+
+body.printing-receipt #printableReceipt,
+body.printing-statement #printableStatement {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  max-width: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  color: #000;
+}
+
+body.printing-receipt #printableReceipt .statement-table,
+body.printing-statement #printableStatement .statement-table {
+  width: 100%;
+}
+
+body.printing-receipt #printableReceipt th,
+body.printing-receipt #printableReceipt td,
+body.printing-statement #printableStatement th,
+body.printing-statement #printableStatement td {
+  border: 1px solid #aaa;
+}
+}
+
+#adminReportsSection {
+scroll-margin-top: 20px;
+}
+
+#adminReportDisplay {
+margin-top: 18px;
+overflow-x: auto;
+}
+
+@media print {
+body.printing-admin-report * {
+  visibility: hidden !important;
+}
+
+body.printing-admin-report #adminReportDisplay,
+body.printing-admin-report #adminReportDisplay * {
+  visibility: visible !important;
+}
+
+body.printing-admin-report #adminReportDisplay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  border: none;
+  padding: 0;
+  color: #000;
+}
+}
+  
+
+/* Voided payments */
+.void-panel {
+border: 1px solid #f0c4c4;
+background: #fff6f6;
+border-radius: 10px;
+padding: 16px;
+margin: 16px 0;
+}
+.void-panel[hidden] { display: none; }
+.void-panel h3 { margin-top: 0; }
+.void-panel .primary-btn + .primary-btn { margin-left: 8px; background: #647084; }
+.voided-row td { color: #8a94a6; text-decoration: line-through; }
+.voided-row td.void-status { text-decoration: none; font-weight: bold; color: #b42318; }
+.voided-row td button { text-decoration: none; }
+.void-banner { color: #b42318; font-weight: bold; }
+
+
+/* ---------- Menu and pages ---------- */
+.topbar-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+
+.menu-btn {
+flex: none;
+width: 44px;
+height: 44px;
+border: 1px solid var(--border);
+border-radius: 8px;
+background: var(--surface);
+color: var(--primary);
+font-size: 22px;
+line-height: 1;
+}
+.menu-btn:hover { background: #eef2fa; }
+
+.nav-overlay {
+position: fixed;
+inset: 0;
+background: rgba(23, 32, 51, 0.45);
+z-index: 1000;
+}
+
+.sidebar {
+position: fixed;
+top: 0;
+bottom: 0;
+left: 0;
+width: min(280px, 85vw);
+display: flex;
+flex-direction: column;
+gap: 6px;
+padding: 16px;
+background: var(--surface);
+border-right: 1px solid var(--border);
+box-shadow: 4px 0 24px rgba(23, 43, 77, 0.18);
+overflow-y: auto;
+z-index: 1001;
+transform: translateX(-105%);
+visibility: hidden;
+transition: transform 0.2s ease, visibility 0.2s;
+}
+.sidebar.open { transform: none; visibility: visible; }
+
+.sidebar-head {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 8px;
+color: var(--primary);
+font-size: 18px;
+}
+
+.nav-item {
+text-align: left;
+border: 0;
+border-radius: 8px;
+padding: 13px 14px;
+background: transparent;
+color: var(--text);
+font-size: 16px;
+}
+.nav-item:hover { background: #eef2fa; }
+.nav-item.active { background: var(--primary); color: #fff; font-weight: bold; }
+
+.hint { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.summary-grid.four { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.period-bar { margin-top: 0; }
+
+
+/* ---------- Edit student and backup ---------- */
+.edit-panel { border-color: #c9d6ee; background: #f5f8ff; }
+.small-btn {
+border: 1px solid var(--primary);
+border-radius: 6px;
+padding: 6px 12px;
+background: var(--surface);
+color: var(--primary);
+font-size: 14px;
+}
+.small-btn:hover { background: #eef2fa; }
+.warn-hint { color: #8a4b00; background: #fff6e5; border: 1px solid #f3d9a4; border-radius: 8px; padding: 10px 12px; }
+#view-backup .primary-btn { margin: 4px 8px 4px 0; }
+#restoreFile { display: block; margin: 8px 0; max-width: 100%; }

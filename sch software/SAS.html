@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>School Fee Manager</title>
+  <link rel="stylesheet" href="SAS.CSS">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <button type="button" id="menuBtn" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">☰</button>
+      <div>
+        <h1>School Ledger</h1>
+        <p>Fee management and administration</p>
+      </div>
+    </div>
+    <span class="demo-tag">DEMO</span>
+  </header>
+
+  <div id="navOverlay" class="nav-overlay" hidden></div>
+  <nav id="sidebar" class="sidebar" aria-label="Main menu">
+    <div class="sidebar-head">
+      <strong>Menu</strong>
+      <button type="button" id="closeMenu" class="menu-btn" aria-label="Close menu">✕</button>
+    </div>
+    <button type="button" class="nav-item" data-view="home"><span aria-hidden="true">🏠</span> Dashboard</button>
+    <button type="button" class="nav-item" data-view="fees"><span aria-hidden="true">📋</span> Fee structure</button>
+    <button type="button" class="nav-item" data-view="payments"><span aria-hidden="true">💳</span> Record payment</button>
+    <button type="button" class="nav-item" data-view="history"><span aria-hidden="true">🔎</span> Payment history</button>
+    <button type="button" class="nav-item" data-view="statements"><span aria-hidden="true">🧾</span> Statements</button>
+    <button type="button" class="nav-item" data-view="family"><span aria-hidden="true">👨‍👩‍👧</span> Family accounts</button>
+    <button type="button" class="nav-item" data-view="reports"><span aria-hidden="true">📊</span> Reports</button>
+    <button type="button" class="nav-item" data-view="backup"><span aria-hidden="true">💾</span> Backup and restore</button>
+  </nav>
+
+  <main class="container">
+    <div class="view" id="view-home">
+      <section class="welcome">
+        <h2>Dashboard</h2>
+        <p>Register students and see fees at a glance. Open the <strong>☰ menu</strong> for fees, payments, statements and reports.</p>
+      </section>
+
+      <section class="panel period-bar" id="periodBar">
+        <h2>Current period</h2>
+        <p class="hint">School year (session) is the academic year, written like 2026/2027. A term is one of its three parts. The figures below are for the period chosen here, and it is pre-filled on the other pages.</p>
+        <div class="form-grid">
+          <label>School year (session)
+            <input id="dashYear" maxlength="9" autocomplete="off" placeholder="2026/2027">
+          </label>
+          <label>Term
+            <select id="dashTerm"><option value="First Term">First Term</option><option value="Second Term">Second Term</option><option value="Third Term">Third Term</option></select>
+          </label>
+        </div>
+        <p id="periodMessage" role="status"></p>
+      </section>
+
+      <section class="summary-grid four">
+        <article class="summary-card"><p>Total students</p><h2 id="studentCount">0</h2></article>
+        <article class="summary-card"><p>Expected fees</p><h2 id="expected">₦0</h2></article>
+        <article class="summary-card"><p>Fees collected</p><h2 id="collected">₦0</h2></article>
+        <article class="summary-card"><p>Outstanding fees</p><h2 id="outstanding">₦0</h2></article>
+      </section>
+      <p class="hint">Showing <strong id="dashPeriodLabel"></strong>. Expected fees come from the Fee Structure for every registered student, even before any payment is recorded. Voided payments are not counted.</p>
+      <p class="hint warn-hint" id="backupReminder" hidden>⚠ Records are stored in this browser only. Open the ☰ menu and choose <strong>Backup and restore</strong> to download a backup.</p>
+
+      <section class="panel" id="registration">
+      <h2>Register a student</h2>
+      <p>Add a student and connect siblings to one family account. An admission number is suggested automatically; change it only if the student already has one.</p>
+
+      <form id="studentForm">
+        <div class="form-grid">
+          <label>Student full name
+            <input id="studentName" required maxlength="100" placeholder="e.g. Tolu Adewale">
+          </label>
+          <label>Admission number
+            <input id="admissionNo" required maxlength="30" autocomplete="off" placeholder="e.g. SCH001">
+          </label>
+          <label>Class
+            <select id="studentClass" required>
+              <option value="">Select class</option>
+              <option>Nursery 1</option><option>Nursery 2</option>
+              <option>Primary 1</option><option>Primary 2</option>
+              <option>Primary 3</option><option>Primary 4</option>
+              <option>Primary 5</option><option>Primary 6</option>
+              <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+              <option>SSS 1</option><option>SSS 2</option><option>SSS 3</option>
+            </select>
+          </label>
+          <label>Parent/guardian name
+            <input id="parentName" required maxlength="100" placeholder="e.g. Mr Adewale">
+          </label>
+          <label>Family account
+            <select id="familySelect">
+              <option value="">Create new family</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary-btn" type="submit">Save student</button>
+        <p id="formMessage" role="status"></p>
+      </form>
+    </section>
+
+      <section class="panel">
+      <h2>Registered students</h2>
+      <input id="studentSearch" placeholder="Search name, admission number or family">
+
+      <form id="editStudentPanel" class="void-panel edit-panel" hidden>
+        <h3>Edit student</h3>
+        <p class="hint">Use this to correct a student's record. A corrected name or admission number is also updated on that student's receipts and payment history. Fees already charged stay as they were; a new class applies to fees charged from now on.</p>
+        <div class="form-grid">
+          <label>Student full name
+            <input id="editName" required maxlength="100" autocomplete="off">
+          </label>
+          <label>Admission number
+            <input id="editAdmission" required maxlength="30" autocomplete="off">
+          </label>
+          <label>Class
+            <select id="editClass" required></select>
+          </label>
+          <label>Changed by
+            <input id="editedBy" required maxlength="80" placeholder="Your name">
+          </label>
+        </div>
+        <button class="primary-btn" type="submit">Save changes</button>
+        <button class="primary-btn" type="button" id="cancelEdit">Cancel</button>
+        <p id="editMessage" role="status"></p>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Admission No.</th><th>Class</th><th>Family account</th><th>Action</th></tr></thead>
+          <tbody id="studentTable">
+            <tr><td colspan="5">No students registered yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+      <p id="message" class="message"></p>
+    </div>
+
+    <div class="view" id="view-fees" hidden>
+      <section class="panel" id="feeStructure">
+      <h2>Fee Structure</h2>
+      <p>Add fees expected from students. A fee becomes part of a student's statement when charges are generated for that period.</p>
+
+      <p class="hint">Each fee is set for a class (or All Classes). Pick a suggestion or type any new fee (Uniform, Textbook, Sport, Exam...). Choose <strong>One-time</strong> for fees paid once, such as the registration form.</p>
+
+      <form id="feeForm">
+        <div class="form-grid">
+          <label>Fee name
+            <input id="feeName" required list="feeNameOptions" autocomplete="off" placeholder="Pick or type e.g. Uniform">
+            <datalist id="feeNameOptions"><option value="Tuition fee"><option value="Registration form"><option value="Uniform"><option value="Textbooks"><option value="Sports"><option value="Exam fee"><option value="PTA levy"><option value="Transport"><option value="ICT fee"></datalist>
+          </label>
+          <label>Amount (₦)
+            <input id="feeAmount" type="number" min="0.01" step="0.01" required placeholder="e.g. 25000">
+          </label>
+          <label>Class
+            <select id="feeClass" required>
+              <option value="">Select class</option>
+              <option>Nursery 1</option><option>Nursery 2</option>
+              <option>Primary 1</option><option>Primary 2</option>
+              <option>Primary 3</option><option>Primary 4</option>
+              <option>Primary 5</option><option>Primary 6</option>
+              <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+              <option>SSS 1</option><option>SSS 2</option><option>SSS 3</option>
+              <option>All Classes</option>
+            </select>
+          </label>
+          <label>Payment period
+            <select id="feePeriod" required>
+              <option value="Per term">Per term</option>
+              <option value="Per session">Per session</option>
+              <option value="One-time">One-time (once per student)</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary-btn" type="submit">Add Fee</button>
+        <p id="feeMessage" role="status"></p>
+      </form>
+
+      <h3>Saved Fees</h3>
+      <label for="feeClassFilter">Choose a class</label>
+      <select id="feeClassFilter" class="class-picker">
+        <option value="">Select a class</option>
+        <option>Nursery 1</option><option>Nursery 2</option>
+        <option>Primary 1</option><option>Primary 2</option>
+        <option>Primary 3</option><option>Primary 4</option>
+        <option>Primary 5</option><option>Primary 6</option>
+        <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+        <option>SSS 1</option><option>SSS 2</option><option>SSS 3</option>
+      </select>
+
+      <div id="classFeeView" hidden>
+        <button type="button" id="backToClasses" class="primary-btn">← Back to classes</button>
+        <h3 id="selectedClassTitle"></h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fee name</th><th>Amount</th><th>Period</th><th>Action</th></tr></thead>
+            <tbody id="classFeeTable"></tbody>
+          </table>
+        </div>
+        <p id="classFeeTotal"></p>
+      </div>
+    </section>
+    </div>
+
+    <div class="view" id="view-payments" hidden>
+      <section class="panel" id="paymentsSection">
+        <h2>Record a Payment</h2>
+      <p class="hint">School year (session) is the academic year, written like 2026/2027. A term is one of its three parts: First, Second or Third Term.</p>
+        <p>Record the amount received. Partial payments are allowed.</p>
+        <form id="paymentForm">
+          <div class="form-grid">
+            <label>Student
+              <select id="paymentStudent" required><option value="">Select student</option></select>
+            </label>
+            <label>Payment amount (₦)
+              <input id="paymentAmount" type="number" min="0.01" step="0.01" required placeholder="e.g. 10000">
+            </label>
+            <label>School year (session)
+              <input id="paymentYear" required value="2026/2027">
+            </label>
+            <label>Term
+              <select id="paymentTerm" required>
+                <option value="First Term">First Term</option>
+                <option value="Second Term">Second Term</option>
+                <option value="Third Term">Third Term</option>
+              </select>
+            </label>
+            <label>Payment method
+              <select id="paymentMethod" required>
+                <option>Cash</option><option>Bank transfer</option><option>POS</option><option>Other</option>
+              </select>
+            </label>
+            <label>Note (optional)
+              <input id="paymentNote" placeholder="e.g. Part payment for tuition">
+            </label>
+          </div>
+          <button class="primary-btn" type="submit">Record Payment &amp; Generate Receipt</button>
+          <p id="paymentMessage" role="status"></p>
+        </form>
+      </section>
+
+      <section class="panel" id="receiptSection">
+      <h2>Latest Receipt</h2>
+      <div id="receiptDisplay"><p>No receipt generated yet.</p></div>
+      <button id="printReceipt" class="primary-btn" type="button" hidden>Print Receipt</button>
+    </section>
+    </div>
+
+    <div class="view" id="view-history" hidden>
+      <section class="panel" id="historySection">
+      <h2>Payment History</h2>
+      <label for="paymentHistoryStudent">Filter by student</label>
+      
+<div class="form-grid">
+    <label>
+      Search payment
+      <input
+        id="paymentHistorySearch"
+        type="search"
+        placeholder="Receipt number, student or admission number"
+      >
+    </label>
+  
+    <label>
+      Filter by school year
+      <input
+        id="paymentHistoryYear"
+        type="text"
+        placeholder="e.g. 2026/2027"
+      >
+    </label>
+  
+    <label>
+      Filter by term
+      <select id="paymentHistoryTerm">
+        <option value="">All Terms</option>
+        <option value="First Term">First Term</option>
+        <option value="Second Term">Second Term</option>
+        <option value="Third Term">Third Term</option>
+      </select>
+    </label>
+  </div>
+  
+      <select id="paymentHistoryStudent"><option value="">All students</option></select>
+
+      <form id="voidPanel" class="void-panel" hidden>
+        <h3>Void payment</h3>
+        <p id="voidTarget"></p>
+        <div class="form-grid">
+          <label>Reason for voiding
+            <input id="voidReason" required maxlength="200" placeholder="e.g. Wrong amount entered">
+          </label>
+          <label>Voided by
+            <input id="voidedBy" required maxlength="80" placeholder="Your name">
+          </label>
+        </div>
+        <button class="primary-btn" type="submit">Confirm void</button>
+        <button class="primary-btn" type="button" id="cancelVoid">Cancel</button>
+        <p id="voidMessage" role="status"></p>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Receipt No.</th><th>Date</th><th>Student</th><th>Admission No.</th><th>School Year / Term</th><th>Method</th><th>Amount</th><th>Status</th></tr></thead>
+          <tbody id="paymentHistoryTable"><tr><td colspan="8">No payments recorded yet.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+
+    <div class="view" id="view-statements" hidden>
+      <section class="panel" id="statementSection">
+      <h2>Statement of Account</h2>
+      <p class="hint">School year (session) is the academic year, written like 2026/2027. A term is one of its three parts: First, Second or Third Term.</p>
+      <p>Choose a student and period to generate a statement of charges, payments and balance.</p>
+      <form id="statementForm">
+        <div class="form-grid">
+          <label>Student
+            <select id="statementStudent" required>
+              <option value="">Select student</option>
+            </select>
+          </label>
+          <label>School year (session)
+            <input id="statementYear" required value="2026/2027">
+          </label>
+          <label>Term
+            <select id="statementTerm" required>
+              <option value="First Term">First Term</option>
+              <option value="Second Term">Second Term</option>
+              <option value="Third Term">Third Term</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary-btn" type="submit">Generate Statement</button>
+        <p id="statementMessage" role="status"></p>
+      </form>
+      <div id="statementDisplay"><p>No statement generated yet.</p></div>
+      <button id="printStatement" class="primary-btn" type="button" hidden>Print Statement</button>
+    </section>
+    </div>
+
+    <div class="view" id="view-family" hidden>
+      <section class="panel" id="familyAccountSection">
+        <h2>Family Account</h2>
+      <p class="hint">School year (session) is the academic year, written like 2026/2027. A term is one of its three parts: First, Second or Third Term.</p>
+        <p>View siblings linked to the same parent or guardian. Each student's account remains separate.</p>
+      
+        <form id="familyAccountForm">
+          <div class="form-grid">
+            <label>
+              Select family
+              <select id="familyAccountSelect" required>
+                <option value="">Select a family</option>
+              </select>
+            </label>
+      
+            <label>
+              School year (session)
+              <input id="familyAccountYear" value="2026/2027" required>
+            </label>
+      
+            <label>
+              Term
+              <select id="familyAccountTerm" required>
+                <option value="First Term">First Term</option>
+                <option value="Second Term">Second Term</option>
+                <option value="Third Term">Third Term</option>
+              </select>
+            </label>
+          </div>
+      
+          <button class="primary-btn" type="submit">View Family Account</button>
+          <p id="familyAccountMessage" role="status"></p>
+        </form>
+      
+        <div id="familyAccountDisplay">
+          <p>Select a family to view its account.</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="view" id="view-reports" hidden>
+      <section class="panel" id="adminReportsSection">
+    <h2>Admin Reports</h2>
+      <p class="hint">School year (session) is the academic year, written like 2026/2027. A term is one of its three parts: First, Second or Third Term.</p>
+    <p>
+      Review school fee collections and outstanding balances
+      for a selected school year and term.
+    </p>
+  
+    <form id="adminReportForm">
+      <div class="form-grid">
+        <label>
+          School year (session)
+          <input
+            id="reportYear"
+            value="2026/2027"
+            required
+          >
+        </label>
+  
+        <label>
+          Term
+          <select id="reportTerm" required>
+            <option value="First Term">First Term</option>
+            <option value="Second Term">Second Term</option>
+            <option value="Third Term">Third Term</option>
+          </select>
+        </label>
+      </div>
+  
+      <button class="primary-btn" type="submit">
+        Generate Report
+      </button>
+  
+      <button
+        class="primary-btn"
+        type="button"
+        id="printAdminReport"
+      >
+        Print Report
+      </button>
+  
+      <p id="adminReportMessage" role="status"></p>
+    </form>
+  
+    <div id="adminReportDisplay">
+      <p>Select a school year and term, then generate a report.</p>
+    </div>
+  </section>
+    </div>
+
+    <div class="view" id="view-backup" hidden>
+      <section class="panel" id="backupSection">
+        <h2>Backup and restore</h2>
+        <p class="hint">Records are stored in this browser only. Clearing the browser's data would erase them, so download a backup regularly and keep it somewhere safe, such as a flash drive. A backup contains student and payment records, so keep it private.</p>
+        <p><strong id="lastBackup"></strong></p>
+        <button class="primary-btn" type="button" id="backupDownload">Download full backup</button>
+        <p id="backupMessage" role="status"></p>
+
+        <h3>Export for Excel</h3>
+        <p class="hint">Spreadsheet copies for viewing or printing. They cannot be restored; use the full backup for that.</p>
+        <button class="primary-btn" type="button" id="exportPayments">Export payments (CSV)</button>
+        <button class="primary-btn" type="button" id="exportStudents">Export students (CSV)</button>
+      </section>
+
+      <section class="panel" id="restoreSection">
+        <h2>Restore from a backup</h2>
+        <p class="hint">Restoring replaces everything currently saved here with the contents of the backup file.</p>
+        <label for="restoreFile">Choose a backup file (.json)</label>
+        <input id="restoreFile" type="file" accept=".json,application/json">
+        <p id="restoreSummary"></p>
+        <button class="primary-btn" type="button" id="restoreConfirm" hidden>Replace current data with this backup</button>
+        <button class="primary-btn" type="button" id="undoRestore" hidden>Undo last restore</button>
+        <p id="restoreMessage" role="status"></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="SAS.JS"></script>
+</body>
+</html>
